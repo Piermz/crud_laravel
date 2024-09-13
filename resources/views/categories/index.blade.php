@@ -1,6 +1,4 @@
 <x-layout>
-
-
     <section class="p-3 sm:p-5 ">
         <p class="text-xl font-semibold text-center mb-5 text-blue-600/100 dark:text-blue-500/100">Table</p>
         <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
@@ -21,25 +19,18 @@
                                     </svg>
                                 </div>
                                 <input type="text" id="simple-search"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                    placeholder="Search" required="">
+                                    class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="Search">
                             </div>
                         </form>
                     </div>
-
                     <div
                         class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
                         <x-theme-toggle />
                         <button type="button" id="defaultModalButton" data-modal-target="defaultModal"
                             data-modal-toggle="defaultModal"
-                            class="block text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                            type="button">
-                            {{-- <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <path clip-rule="evenodd" fill-rule="evenodd"
-                                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
-                            </svg> --}}
-                            Add product
+                            class="block text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                            Add category
                         </button>
                         <div class="flex items-center space-x-3 w-full md:w-auto">
                             <button id="actionsDropdownButton" data-dropdown-toggle="actionsDropdown"
@@ -86,15 +77,8 @@
                             </button>
                             <div id="filterDropdown"
                                 class="z-10 hidden w-48 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
-                                <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Choose brand</h6>
+                                <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Choose category</h6>
                                 <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
-                                    <li class="flex items-center">
-                                        <input id="apple" type="checkbox" value=""
-                                            class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                        <label for="apple"
-                                            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Apple
-                                            (56)</label>
-                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -104,44 +88,30 @@
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
-                                <th scope="col" class="px-4 py-3">IMAGE</th>
-                                <th scope="col" class="px-4 py-3">TITLE</th>
-                                <th scope="col" class="px-4 py-3">PRICE</th>
-                                <th scope="col" class="px-4 py-3">CATEGORY</th>
-                                <th scope="col" class="px-4 py-3">STOCK</th>
+                                <th scope="col" class="px-4 py-3">NAME</th>
                                 <th scope="col" class="px-4 py-3">DESCRIPTION</th>
-                                <th scope="col" class="px-4 py-3">ACTION</th>
                                 <th scope="col" class="px-4 py-3">
-                                    <span class="sr-only">Actions</span>
+                                    actions
                                 </th>
                             </tr>
                         </thead>
-                        @foreach ($products as $product)
+                        @foreach ($categories as $category)
                             <tbody>
-                                <tr class="border-b dark:border-gray-700 ">
-                                    <th scope="row"
-                                        class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        <img class="h-10 w-30 object-cover rounded-lg"
-                                            src="{{ $product->image ? asset('/storage/products/' . $product->image) : asset('default-image.jpg') }}"
-                                            alt="Product Image">
-                                    </th>
-                                    <td class="px-4 py-3">{{ $product->title }}</td>
-                                    <td class="px-4 py-3">{{ 'Rp' . number_format($product->price, 0, ',') }}</td>
-                                    <td class="px-4 py-3"> {{ $product->category->name }} </td>
-                                    <td class="px-4 py-3">{{ $product->stock }}</td>
-                                    <td class="px-4 py-3">{{ Str::limit($product->description, 50) }}</td>
+                                <tr>
+                                    <td class="px-4 py-3">{{ $category->name }}</td>
+                                    <td class="px-4 py-3">{{ Str::limit($category->description, 50) }}</td>
                                     <td class="px-4 py-3 flex items-center justify-start">
                                         <!-- Pastikan ini adalah flex dan items-center -->
-                                        <a href="{{ route('products.show', $product->id) }}"
-                                            class="text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-900 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 ">
+                                        <a href="{{ route('categories.show', $category->id) }}"
+                                            class="text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-900 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
                                             Show
                                         </a>
                                         <button type="button"
                                             class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-                                            onclick="window.location='{{ route('products.edit', $product->id) }}'">Edit</button>
+                                            onclick="window.location='{{ route('categories.edit', $category->id) }}'">Edit</button>
                                         <button type="button"
                                             class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
-                                            onclick="confirmDelete({{ $product->id }})">Delete</button>
+                                            onclick="confirmDelete({{ $category->id }})">Delete</button>
                                         <!-- Added onclick event -->
                                     </td>
                                 </tr>
@@ -152,7 +122,7 @@
                 <nav class="flex flex-col md:flex-row justify-end items-start md:items-center space-y-3 md:space-y-0 p-4"
                     aria-label="Table navigation">
                     <ul class="inline-flex items-stretch -space-x-px">
-                        {{ $products->links('') }}
+                        {{ $categories->links('') }}
                     </ul>
                 </nav>
             </div>
@@ -168,7 +138,7 @@
                 <div
                     class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                        Add Product
+                        Add Category
                     </h3>
                     <button type="button"
                         class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -183,98 +153,50 @@
                     </button>
                 </div>
                 <!-- Modal body -->
-                <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('categories.store') }}" method="POST" enctype="multipart/form-data" class="max-w-lg mx-auto p-6">
                     @csrf
-                    <div class="grid gap-4 mb-4 sm:grid-cols-2">
-                        <div>
-                            <label for="name"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title</label>
-                            <input type="text" name="title" id="name"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                placeholder="Type product name" required="">
-                        </div>
-                        <div>
-                            <label for="stock"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Stock</label>
-                            <input type="number" name="stock" id="stock"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                placeholder="Stock" required="">
-                        </div>
-                        <div>
-                            <label for="price"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Price</label>
-                            <input type="number" name="price" id="price"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                placeholder="$2999" required="">
-                        </div>
-                        <div>
-                            <label for="categories"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select
-                                Category</label>
-                            <select id="categories" name="category_id"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach
-                            </select>
+                    <div class="grid gap-6 mb-6 sm:grid-cols-2">
+                        <div class="sm:col-span-2">
+                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
+                            <input type="text" name="name" id="name"
+                                class="block w-full p-3 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="Enter category name">
                         </div>
                         <div class="sm:col-span-2">
-                            <label for="description"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
+                            <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
                             <textarea id="description" name="description" rows="4"
-                                class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                placeholder="Write product description here"></textarea>
+                                class="block w-full p-3 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="Enter category description"></textarea>
                         </div>
                     </div>
-                    <div class="flex items-center justify-center w-full dark:bg-gray-800">
-                        <label for="dropzone-file"
-                            class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700">
-                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                                </svg>
-                                <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span
-                                        class="font-semibold">Click to upload</span> or drag and drop</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX.
-                                    800x400px)</p>
-                            </div>
-                            <input id="dropzone-file" type="file" name="image" class="hidden" />
-                        </label>
-                    </div>
                     <button type="submit"
-                        class="mt-4 w-full text-white flex justify-center items-center bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800 transition duration-300 ease-in-out transform hover:scale-105">
-                        <svg class="mr-2 w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg">
+                        class="w-full mt-4 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800 transition duration-300 ease-in-out transform hover:scale-105">
+                        <svg class="mr-2 w-5 h-5 inline-block" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd"
                                 d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
                                 clip-rule="evenodd"></path>
                         </svg>
-                        Add new product
+                        Add new category
                     </button>
                 </form>
             </div>
         </div>
     </div>
-
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        function confirmDelete(productId) {
+        function confirmDelete(categoryId) {
             Swal.fire({
-                title: 'Apakah Anda yakin?',
-                text: "Anda tidak akan bisa mengembalikannya!",
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Ya, hapus!'
+                confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Send DELETE request to the server
-                    fetch('/products/' + productId, {
+                    fetch('/categories/' + categoryId, {
                             method: 'DELETE',
                             headers: {
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}', // Include CSRF token
@@ -283,23 +205,17 @@
                         })
                         .then(response => {
                             if (response.ok) {
-                                // Show success popup
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Dihapus!',
-                                    text: 'Data Berhasil Dihapus!',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                }).then(() => {
-                                    window.location.reload(); // Reload the page to see the changes
-                                });
+                                Swal.fire('Deleted!', 'Category has been deleted.', 'success')
+                                    .then(() => {
+                                        location.reload();
+                                    });
                             } else {
-                                Swal.fire('Error', 'Gagal menghapus produk.', 'error');
+                                Swal.fire('Error', 'There was an error deleting the category.', 'error');
                             }
                         })
                         .catch(error => {
                             console.error('Error:', error);
-                            Swal.fire('Error', 'Terjadi kesalahan saat menghapus produk.', 'error');
+                            Swal.fire('Error', 'There was an error deleting the category.', 'error');
                         });
                 }
             });
@@ -307,17 +223,17 @@
 
         function confirmDeleteAll() {
             Swal.fire({
-                title: 'Apakah Anda yakin?',
-                text: "Semua produk akan dihapus!",
+                title: 'Are you sure?',
+                text: "All categories will be deleted!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Ya, hapus semua!'
+                confirmButtonText: 'Yes, delete all!'
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Send DELETE request to the server
-                    fetch('/products', {
+                    fetch('/categories', {
                             method: 'DELETE',
                             headers: {
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}', // Include CSRF token
@@ -326,23 +242,17 @@
                         })
                         .then(response => {
                             if (response.ok) {
-                                // Show success popup
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Dihapus!',
-                                    text: 'Semua produk berhasil dihapus!',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                }).then(() => {
-                                    window.location.reload(); // Reload the page to see the changes
-                                });
+                                Swal.fire('Deleted!', 'All categories have been deleted.', 'success')
+                                    .then(() => {
+                                        location.reload();
+                                    });
                             } else {
-                                Swal.fire('Error', 'Gagal menghapus semua produk.', 'error');
+                                Swal.fire('Error', 'There was an error deleting all categories.', 'error');
                             }
                         })
                         .catch(error => {
                             console.error('Error:', error);
-                            Swal.fire('Error', 'Terjadi kesalahan saat menghapus semua produk.', 'error');
+                            Swal.fire('Error', 'There was an error deleting all categories.', 'error');
                         });
                 }
             });
@@ -370,5 +280,4 @@
             });
         </script>
     @endif
-
 </x-layout>

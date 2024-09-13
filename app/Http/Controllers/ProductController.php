@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-// use Illuminate\View\view;
+
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
+use App\Models\Category;
 
 class ProductController extends Controller
 {
@@ -16,10 +18,10 @@ class ProductController extends Controller
     {
         $products = Product::latest()->paginate(10);
 
-
+        $categories = Category::all();
         // menampilkan view index
         // compact : mengirimkan data ke view
-        return view('products/index', compact('products'));
+        return view('products/index', compact('products' , 'categories'));
     }
 
     // metode untuk menghapus produk berdasarkan id
@@ -27,6 +29,7 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
         if ($product) {
+            Storage::delete('public/products/' . $product->image);
             $product->delete();
             return response()->json(['success' => 'Produk berhasil dihapus.']);
         }
@@ -35,60 +38,9 @@ class ProductController extends Controller
 
     public function create(): view
     {
+         // Mengembalikan tampilan untuk membuat produk baru
         return view('products.create');
     }
-
-    // public function store(Request $request): RedirectResponse
-    // {
-
-    //     // Request : objek yang mengandung semua data yang dikirimkan oleh pengguna melalui formulir atau URL
-
-    //     // $request : untuk mengakses data yang dikirimkan oleh pengguna
-
-    //     // RedirectResponse : digunakan untuk mengarahkan kembali ke halaman lain atau ke daftar data setelah data baru berhasil disimpan
-    //     // Validasi input
-    //     $request->validate([
-    //         'title' => 'required|string|max:255',
-    //         'stock' => 'required|integer',
-    //         'price' => 'required|numeric',
-    //         'description' => 'nullable|string',
-    //         'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validasi untuk gambar
-    //     ]);
-
-    //     // Simpan produk baru
-    //     // $product = new Product();
-    //     // $product->name = $request->title; // Menggunakan title sebagai nama produk
-    //     // $product->stock = $request->stock;
-    //     // $product->price = $request->price;
-    //     // $product->description = $request->description;
-
-    //     $image = $request->file('image');
-    //     $image->storeAs('public/products', $image->hashName());
-
-    //     //create product
-    //     Product::create([
-    //         'image' => $image->hashName(),
-    //         'title' => $request->title,
-    //         'description' => $request->description,
-    //         'price' => $request->price,
-    //         'stock' => $request->stock
-    //     ]);
-
-
-
-    //     // hashName, metode yang digunakan dalam konteks upload file untuk menghasilkan nama file yang unik dan aman, fitur ini biasanya digunakan dalam sistem upload file untuk menghindari konflik nama file dan untuk memastikan bahwa file yang di-upload tidak akan menimpa file lainnya.
-
-
-    //     // Menangani upload gambar
-    //     // if ($request->hasFile('image')) {
-    //     //     $imagePath = $request->file('image')->store('images', 'public');
-    //     //     $product->image = $imagePath; // Simpan path gambar
-    //     // }
-
-    //     // $product->save();
-
-    //     return redirect()->route('products.index');
-    // }
 
     public function store(Request $request): RedirectResponse
     {
@@ -96,21 +48,23 @@ class ProductController extends Controller
         $request->validate([
             'image'         => 'required|image|mimes:jpeg,jpg,png|max:2048',
             'title'         => 'required|',
+            'category_id'   => 'required|',
             'description'   => 'required|min:5',
             'price'         => 'required|numeric|max:99999999',
             'stock'         => 'required|numeric|max:99999999'
         ]);
 
 
-        //upload image
-        $image = $request->file('image');
-        $image->storeAs('public/products', $image->hashName());
+        // Upload gambar
+        $image = $request->file('image');  // Mengambil file gambar dari request
+        $image->storeAs('public/products', $image->hashName()); // Menyimpan gambar ke direktori 'public/products' dengan nama hash
 
 
-        //create product
+        // Membuat produk baru
         Product::create([
-            'image'         => $image->hashName(),
-            'title'         => $request->title,
+            'image'         => $image->hashName(), // Menyimpan nama hash gambar ke kolom 'image'
+            'title'         => $request->title, // Menyimpan judul produk dll
+            'category_id'   => $request->category_id,
             'description'   => $request->description,
             'price'         => $request->price,
             'stock'         => $request->stock
@@ -125,7 +79,8 @@ class ProductController extends Controller
 
 
 
-    public function show(string $id): View {
+    public function show(string $id): View
+    {
 
         //ambil product berdasarkan id yang ada
         $product = Product::findOrFail($id);
@@ -134,53 +89,55 @@ class ProductController extends Controller
         return view('products/show', compact('product'));
     }
 
-    public function edit($id) {
+    public function edit($id)
+    {
         $product = Product::findOrFail($id);
         return view('products.edit', compact('product'));
     }
 
+
     public function update(Request $request, $id): RedirectResponse
     {
-        // Validate the incoming request data
+        // Validasi data permintaan yang masuk
         $request->validate([
-            'image' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
-            'title' => 'required|string|max:255',
-            'description' => 'required|min:5',
-            'price' => 'required|numeric',
-            'stock' => 'required|numeric'
+            'image' => 'nullable|image|mimes:jpeg,jpg,png|max:2048', // Gambar opsional, harus berupa file gambar dengan tipe jpeg, jpg, atau png, dan ukuran maksimal 2048 KB
+            'title' => 'required|string|max:255', // Judul wajib, harus berupa string, dan maksimal 255 karakter
+            'description' => 'required|min:5', // Deskripsi wajib, minimal 5 karakter
+            'price' => 'required|numeric', // Harga wajib, harus berupa angka
+            'stock' => 'required|numeric' // Stok wajib, harus berupa angka
         ]);
 
-        // Find the product by ID
+        // Cari produk berdasarkan ID
         $product = Product::findOrFail($id);
 
-        // Update product details
+        // Perbarui detail produk
         $product->title = $request->title;
         $product->description = $request->description;
         $product->price = $request->price;
         $product->stock = $request->stock;
 
-        // Handle image upload if a new image is provided
+        // Tangani unggahan gambar jika ada gambar baru yang disediakan
         if ($request->hasFile('image')) {
+            // Hapus gambar lama jika ada
+            if ($product->image) {
+                Storage::delete('public/products/' . $product->image);
+            }
+
+            // Simpan gambar baru
             $image = $request->file('image');
             $image->storeAs('public/products', $image->hashName());
             $product->image = $image->hashName();
         }
 
-        // Save the updated product
+        // Simpan produk yang telah diperbarui
         $product->save();
 
-        // Redirect back to the products index with a success message
+        // Arahkan kembali ke indeks produk dengan pesan sukses
         return redirect()->route('products.index')->with(['success' => 'Produk berhasil diperbarui!']);
     }
 
-    public function destroyAll()
-    {
-        // Optionally check for authorization
-        // $this->authorize('delete', Product::class);
 
-        // Delete all products
-        Product::query()->delete(); // Use delete() instead of truncate() if there are foreign key constraints
 
-        return response()->json(['message' => 'All products deleted successfully.'], 200);
-    }
+
+
 }
